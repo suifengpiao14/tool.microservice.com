@@ -23,9 +23,9 @@ class SwaggerController
      * @SWG\Swagger(
      *   schemes={"http"},
      *   @SWG\Info(
-     *     title="支付微服务接口",
+     *     title="二维码微服务接口",
      *     version="1.0.0",
-     *     description="地址：http://pay.microservice.com",
+     *     description="地址：http://qrcode.microservice.com",
      *     @SWG\Contact(
      *          email="2912150017@qq.com"
      *      ),

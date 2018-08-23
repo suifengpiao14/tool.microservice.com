@@ -184,3 +184,34 @@ if (! function_exists('env')) {
         return $value;
     }
 }
+
+
+if(!function_exists('http_build_url')){
+    /**
+     * 根据parse_url格式的数组生成完整的url
+     * @param string|array $url
+     * @param string|array|null $parts
+     * @return string
+     * @internal param $urlArr
+     */
+    function http_build_url($url = null, $parts = null){
+        is_string($url) and $url = parse_url($url);
+        is_string($parts) and parse_str($parts,$parts);
+        if(isset($url['query'])&& isset($parts['query'])){//query部分做二级合并
+            is_string($url['query']) and parse_str($url['query'],$url['query']);
+            is_string($parts['query']) and parse_str($parts['query'],$parts['query']);
+            $url['query']=array_merge((array)$url['query'],(array)$parts['query']);
+            unset($parts['query']);
+        }
+        $urlArr = array_merge((array)$url,(array)$parts);
+        $output=strtr('{scheme}://{host}{port}{path}{query}{fragment}',[
+            '{scheme}'=>isset($urlArr['scheme'])?$urlArr['scheme']:'http',
+            '{host}'=>isset($urlArr['host'])?$urlArr['host']:'',
+            '{port}'=>isset($urlArr['port'])&& '80'!=$urlArr['port']?':'.$urlArr['port']:'',
+            '{path}'=>isset($urlArr['path'])?$urlArr['path']:'',
+            '{query}'=>isset($urlArr['query'])?'?'.http_build_query($urlArr['query']):'',
+            '{fragment}'=>isset($urlArr['fragment'])?'#'.$urlArr['fragment']:'',
+        ]);
+        return $output;
+    }
+}
